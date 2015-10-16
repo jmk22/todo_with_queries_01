@@ -10,12 +10,19 @@ namespace ToDoList
         public HomeModule()
         {
             Get["/"] = _ => {
-              List<string> AllTasks = Task.All();
-              return View["index.cshtml", AllTasks];
+              return View["index.cshtml"];
             };
-            Post["/test_add"] = _ => {
-              Task.Save();
-              return View["test_add.cshtml"];
+            Get["/tasks"] = _ => {
+              List<Task> AllTasks = Task.All();
+              return View["tasks.cshtml", AllTasks];
+            };
+            Get["/tasks/new"] = _ => {
+              return View["tasks_form.cshtml"];
+            };
+            Post["/tasks/new"] = _ => {
+              Task newTask = new Task(Request.Form["task-description"]);
+              newTask.Save();
+              return View["success.cshtml"];
             };
         }
     }

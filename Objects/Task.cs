@@ -8,10 +8,17 @@ namespace ToDoList
     private int id;
     private string description;
 
-    public Task(string Description)
+    public Task(string Description, int Id = 0)
     {
+      id = Id;
       description = Description;
     }
+
+    public int GetId()
+    {
+      return id;
+    }
+
 
     public string GetDescription()
     {
@@ -23,38 +30,65 @@ namespace ToDoList
       description = newDescription;
     }
 
-    public static List<string> All()
+    public static List<Task> All()
     {
-      List<string> AllDescriptions = new List<string>{};
+      List<Task> AllTasks = new List<Task>{};
+
       SqlConnection conn = DB.Connection();
       SqlDataReader rdr = null;
       conn.Open();
-      try
-      {
-          SqlCommand cmd = new SqlCommand("SELECT * FROM tasks", conn);
-          rdr = cmd.ExecuteReader();
 
-          while (rdr.Read())
-          {
-              AllDescriptions.Add(rdr.GetString(1));
-          }
-      }
-      finally
-      {
-          if (rdr != null)
-          {
-              rdr.Close();
-          }
+      SqlCommand cmd = new SqlCommand("SELECT * FROM tasks", conn);
+      rdr = cmd.ExecuteReader();
 
-          if (conn != null)
-          {
-              conn.Close();
-          }
+      while(rdr.Read())
+      {
+        int taskId = rdr.GetInt32(0);
+        string taskDescription = rdr.GetString(1);
+        Task newTask = new Task(taskDescription, taskId);
+        AllTasks.Add(newTask);
       }
-      return AllDescriptions;
+
+      conn.Close();
+
+      return AllTasks;
     }
 
-    public static void Save()
+
+
+
+    // public static List<string> All()
+    // {
+    //   List<string> AllDescriptions = new List<string>{};
+    //   SqlConnection conn = DB.Connection();
+    //   SqlDataReader rdr = null;
+    //   conn.Open();
+    //   try
+    //   {
+    //       SqlCommand cmd = new SqlCommand("SELECT * FROM tasks", conn);
+    //       rdr = cmd.ExecuteReader();
+    //
+    //       while (rdr.Read())
+    //       {
+    //           AllDescriptions.Add(rdr.GetString(1));
+    //       }
+    //   }
+    //   finally
+    //   {
+    //       if (rdr != null)
+    //       {
+    //           rdr.Close();
+    //       }
+    //
+    //       if (conn != null)
+    //       {
+    //           conn.Close();
+    //       }
+    //   }
+    //   return AllDescriptions;
+    // }
+
+    public void Save()
     {
       SqlConnection conn = DB.Connection();
       SqlDataReader rdr;
@@ -64,7 +98,7 @@ namespace ToDoList
 
       SqlParameter testParameter = new SqlParameter();
       testParameter.ParameterName = "@TaskDescription";
-      testParameter.Value = "Test saving with parameters";
+      testParameter.Value = this.GetDescription();
 
       cmd.Parameters.Add(testParameter);
 

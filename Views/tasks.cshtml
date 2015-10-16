@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>To Do List</title>
+  </head>
+  <body>
+    <h1>Here is your list of tasks:</h1>
+    <ul>
+      @foreach (var task in Model) {
+        <li>@task.GetDescription()</li>
+      }
+    </ul>
+  </body>
+</html>
