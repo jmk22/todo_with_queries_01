@@ -24,6 +24,10 @@ namespace ToDoList
               newTask.Save();
               return View["success.cshtml"];
             };
+            Post["/tasks/delete"] = _ => {
+              Task.DeleteAll();
+              return View["cleared.cshtml"];
+            };
         }
     }
 }
