@@ -46,7 +46,7 @@ namespace ToDoList
     {
       public static SqlConnection Connection()
       {
-        SqlConnection conn = new SqlConnection("Data Source=.\\SQLEXPRESS;Initial Catalog=testdb02;Integrated Security=SSPI;");
+        SqlConnection conn = new SqlConnection("Data Source=(localdb)\\mssqllocaldb;Initial Catalog=testdb02;Integrated Security=SSPI;");
         return conn;
       }
 
